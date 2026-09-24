@@ -78,7 +78,51 @@ app.patch("/admin", Auth, (req, res) => {
 });
 
 
+// User adding to cart:
+app.get("/user", (req, res) => {
+    if(AddToCart.length == 0){
+        res.status(404).send("Cart is Empty");
+    } else {
+        res.status(200).send(AddToCart);
+    }
+});
+
+app.post("/user/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const foodItem = foodMenu.find(item => item.id === id);
+    if(foodItem){
+        AddToCart.push(foodItem);
+        res.status(200).send("Item added successfully");
+    } else{
+        res.status(404).send("Item out of stock");
+    }
+});
+
+app.delete("/user/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = AddToCart.findIndex(item => item.id === id);
+
+    if(index != -1){
+        AddToCart.splice(index, 1);
+        res.status(200).send("Deleted Successfully");
+    } else {
+        res.status(404).send("Item is not present");
+    }
+});
+
+// Error Handling
+app.get("/dummy", (req, res) => {
+    try{
+        JSON.parse({"name": "Mohit"});
+        // JSON.parse("Invalid Json");
+        res.send("Hello");
+    } catch(err) {
+        res.send("Some Error Occured " + err);
+    }
+});
+// We cannot ue JSON.parse() because express.json() request body ko safe aur automatic tarike se parse karta hai.
+// JSON.parse() ek saath JSON ko parse krta hai
 
 app.listen(3000, () => {
     console.log("Listening at port number 3000");
-});
+}); 
