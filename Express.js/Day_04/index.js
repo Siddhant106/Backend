@@ -2,8 +2,11 @@ const express = require("express");
 const { Auth } = require("./Middleware/auth");
 const app = express();
 
+
 // CRUD: Create Read Update Delete
 app.use(express.json());
+
+
 // Database: Array
 const foodMenu = [
     { id: 1, food: "Noodles", category: "veg", prices: 200 },
@@ -28,22 +31,27 @@ const foodMenu = [
     { id: 20, food: "Chole Bhature", category: "veg", prices: 200 },
 ];
 
+
 const AddToCart = [];
 // user ko jo bhi food add krna cart me add kar dega
+
 
 // Anyone can see the Menu
 app.get("/food", (req, res) => {
     res.status(200).send(foodMenu);
 });
 
+
 // Authenticate admin here
 // app.use("/admin", Auth);
+
 
 // Add item into food menu
 app.post("/admin", Auth, (req, res) => {
     foodMenu.push(req.body);
     res.status(200).send("Item added successfully");
 });
+
 
 app.delete("/admin/:id", Auth, (req, res) => {
     const id =parseInt(req.params.id);
@@ -56,6 +64,7 @@ app.delete("/admin/:id", Auth, (req, res) => {
         res.status(200).send("Successfully Deleted");
     }
 });
+
 
 app.patch("/admin", Auth, (req, res) => {
     const id = req.body.id;
@@ -87,6 +96,7 @@ app.get("/user", (req, res) => {
     }
 });
 
+
 app.post("/user/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const foodItem = foodMenu.find(item => item.id === id);
@@ -97,6 +107,7 @@ app.post("/user/:id", (req, res) => {
         res.status(404).send("Item out of stock");
     }
 });
+
 
 app.delete("/user/:id", (req, res) => {
     const id = parseInt(req.params.id);
@@ -110,6 +121,7 @@ app.delete("/user/:id", (req, res) => {
     }
 });
 
+
 // Error Handling
 app.get("/dummy", (req, res) => {
     try{
@@ -122,6 +134,8 @@ app.get("/dummy", (req, res) => {
 });
 // We cannot ue JSON.parse() because express.json() request body ko safe aur automatic tarike se parse karta hai.
 // JSON.parse() ek saath JSON ko parse krta hai
+
+
 
 app.listen(3000, () => {
     console.log("Listening at port number 3000");
