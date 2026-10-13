@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const main = require("./databse");
+const main = require("./database");
 const User = require("./Models/users");
 
 
